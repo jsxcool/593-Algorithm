@@ -1,0 +1,18 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/shangxingjiang/Desktop/593-Algorithm/choose()/main.cpp
+iostream
+-
+numeric
+-
+random
+-
+iomanip
+-
+

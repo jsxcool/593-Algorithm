@@ -18,8 +18,8 @@ private:
 	
 public:
   GrowArray() { 
-  	p = nullptr;
-    capacity = 0;
+ 	p = nullptr;
+	capacity = 0;
     size = 0;
   }
   GrowArray(int initialSize): capacity(initialSize), size(0), p(nullptr) {
@@ -32,8 +32,19 @@ public:
 		p[size++] = v;   // ++ after assigning
 	}
 	void insertStart(int v) {
+		checkGrow();
+		for(int i=size; i>0; i--)
+			p[i] = p[i-1];
+		p[0] = v;
+		size++;
 	}
+
 	void insert(int pos, int v) {
+		checkGrow();
+		for(int i=pos; i<size; i++)
+			p[i+1] = p[i];
+		p[pos] = v;		
+		size++; 
 	}
 	void removeStart() {
 	}
@@ -52,12 +63,12 @@ int main() {
 	GrowArray b;
 	for (int i = 0; i < 10; i++)
 		b.insertEnd(i);
-	/*for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)
 		b.insertStart(i);
 	cout << b << '\n';
-	for (int i = 0; i < 10; i++)
+	/*for (int i = 0; i < 10; i++)
 		b.removeStart();
 	b.removeEnd();*/
-	cout << b << '\n';
+	//cout << b << '\n';
 	
 }

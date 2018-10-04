@@ -9,20 +9,21 @@ private:
 	void checkGrow() { // 
 		if(size == capacity){
 			int* old = p;
-			capacity *= 2 + 1;   // in case of capacity = 0
+			capacity *= 2; 
 			p = new int[capacity];
 			for(int i=0; i<size; i++)
 				p[i] = old[i];
+			delete [] old;
 		}
 	}
 	
 public:
   GrowArray() { 
- 	p = nullptr;
-	capacity = 0;
+ 	p = new int;
+	capacity = 1;
     size = 0;
   }
-  GrowArray(int initialSize): capacity(initialSize), size(0), p(nullptr) {
+  GrowArray(int initialSize): capacity(initialSize), size(0) {
   	p = new int[capacity];
   }
   ~GrowArray() { delete [] p; }

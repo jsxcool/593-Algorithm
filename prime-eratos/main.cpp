@@ -39,9 +39,10 @@ int countPrime2(int64_t n){
     }
 
     for(int i=3; i<=n; i+=2) {
-        //cout << isPrime[i] << ' ';
-        if (isPrime[i])
-            count++;
+        if (isPrime[i]){
+	    cout << i <<' ';        
+	    count++;
+	}
     }
     delete [] isPrime;
     return count;

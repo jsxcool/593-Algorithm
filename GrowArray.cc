@@ -41,21 +41,28 @@ public:
 
 	void insert(int pos, int v) {
 		checkGrow();
-		for(int i=pos; i<size; i++)
+		for(int i=size; i>=pos; i--)
 			p[i+1] = p[i];
 		p[pos] = v;		
 		size++; 
 	}
+	
 	void removeStart() {
+		for(int i=0; i<size-1; i++)
+			p[i] = p[i+1];
+		size--;
 	}
 
 	void removeEnd() {
+		size--;
 	}
-	friend ostream& operator <<(ostream& s, const GrowArray& b) {
-		for (int i = 0; i < b.size; i++)
-			s << b.p[i] << ' ';
+	
+	friend ostream& operator << (ostream& s, const GrowArray& g){
+		for(int i=0; i<g.size; i++)
+			s << g.p[i] <<' ';
 		return s;
 	}
+	
 };
 
 
@@ -66,9 +73,11 @@ int main() {
 	for (int i = 0; i < 10; i++)
 		b.insertStart(i);
 	cout << b << '\n';
-	/*for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 10; i++)
 		b.removeStart();
-	b.removeEnd();*/
-	//cout << b << '\n';
-	
+	b.removeEnd();
+	cout << b << '\n';
+
 }
+
+

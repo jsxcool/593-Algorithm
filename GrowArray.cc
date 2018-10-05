@@ -6,7 +6,7 @@ private:
 	int capacity; // the size of the block of memory
 	int size;     // how many are used
 	int* p;       // pointer to the block
-	void checkGrow() { // 
+	void checkGrow() { 
 		if(size == capacity){
 			int* old = p;
 			capacity *= 2; 
@@ -18,15 +18,18 @@ private:
 	}
 	
 public:
-  GrowArray() { 
- 	p = new int;
-	capacity = 1;
-    size = 0;
-  }
-  GrowArray(int initialSize): capacity(initialSize), size(0) {
-  	p = new int[capacity];
-  }
-  ~GrowArray() { delete [] p; }
+  	GrowArray() { 
+ 		p = new int;
+		capacity = 1;
+    	size = 0;
+ 	 }
+  	GrowArray(int initialSize): capacity(initialSize), size(0) {
+  		p = new int[capacity];
+  	}
+  	~GrowArray() { delete [] p; }
+  	
+  	GrowArray(const GrowArray& orig) = delete;
+  	GrowArray& operator = (const GrowArray& orig) = delete;
 	
 	void insertEnd(int v) { //O(1)
 		checkGrow();

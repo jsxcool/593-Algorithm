@@ -1,16 +1,27 @@
 #include<iostream>
 using namespace std;
 
+class Point{
+public:
+	double x, y;
+	Point(double x=0, double y=0) : x(x), y(y) {}
+	friend ostream& operator << (ostream& s, const Point& p){
+		s << "(" << p.x << ", " << p.y << ") ";
+		return s; 
+	}
+};
+
+template<typename T>
 class GrowArray {
 private:
 	int capacity; // the size of the block of memory
 	int size;     // how many are used
-	int* p;       // pointer to the block
+	T* p;       // pointer to the block
 	void checkGrow() { 
 		if(size == capacity){
-			int* old = p;
+			T* old = p;
 			capacity *= 2; 
-			p = new int[capacity];
+			p = new T[capacity];
 			for(int i=0; i<size; i++)
 				p[i] = old[i];
 			delete [] old;
@@ -19,23 +30,23 @@ private:
 	
 public:
   	GrowArray() { 
- 		p = new int;
+ 		p = new T;
 		capacity = 1;
     	size = 0;
  	 }
   	GrowArray(int initialSize): capacity(initialSize), size(0) {
-  		p = new int[capacity];
+  		p = new T[capacity];
   	}
   	~GrowArray() { delete [] p; }
   	
   	GrowArray(const GrowArray& orig) = delete;
   	GrowArray& operator = (const GrowArray& orig) = delete;
 	
-	void insertEnd(int v) { //O(1)
+	void insertEnd(T v) { //O(1)
 		checkGrow();
 		p[size++] = v;   // ++ after assigning
 	}
-	void insertStart(int v) {
+	void insertStart(T v) {
 		checkGrow();
 		for(int i=size; i>0; i--)
 			p[i] = p[i-1];
@@ -43,7 +54,7 @@ public:
 		size++;
 	}
 
-	void insert(int pos, int v) {
+	void insert(int pos, T v) {
 		checkGrow();
 		for(int i=size; i>=pos; i--)
 			p[i+1] = p[i];
@@ -61,6 +72,10 @@ public:
 		size--;
 	}
 	
+	int getSize() const {
+		return size;
+	}
+	
 	friend ostream& operator << (ostream& s, const GrowArray& g){
 		for(int i=0; i<g.size; i++)
 			s << g.p[i] <<' ';
@@ -71,16 +86,17 @@ public:
 
 
 int main() {
-	GrowArray b;
+	GrowArray<Point> b;
 	for (int i = 0; i < 10; i++)
-		b.insertEnd(i);
+		b.insertEnd(Point(i,i));
 	for (int i = 0; i < 10; i++)
-		b.insertStart(i);
+		b.insertStart(Point(i,i));
 	cout << b << '\n';
 	for (int i = 0; i < 10; i++)
 		b.removeStart();
 	b.removeEnd();
 	cout << b << '\n';
+	cout << b.getSize() << '\n';
 
 }
 

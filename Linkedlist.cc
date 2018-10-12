@@ -51,9 +51,9 @@ public:
 		for(int i=0; i<pos; i++)   // reach the position
 			getNode = getNode->next;
 		if(getNode == tail){    // delete tail
-			getNode->prev->next = nullptr;
+			tail = tail->prev;
+			tail->next = nullptr;
 			delete getNode;
-			// why can't just getNode = nullptr ??? 
 			return;
 		}
 		getNode->prev->next = getNode->next;

@@ -108,7 +108,5 @@ LinkedList2 inputAndDelete(int num){
 int main(){
 	LinkedList2 a = inputAndDelete(10);
 	cout << a << '\n';
-	cout << a.getTail()->val << '\n'; 
-	cout << a.getTail()->prev->val << '\n'; 
-	//a.reversePrint();
+	a.reversePrint();
 }

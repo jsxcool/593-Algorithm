@@ -29,11 +29,7 @@ private:
 	}
 	
 public:
-  	GrowArray() { 
- 		p = new T;
-		capacity = 1;
-    	size = 0;
- 	 }
+  	GrowArray() : p(new T), capacity(1), size(0) {}
   	GrowArray(int initialSize): capacity(initialSize), size(0) {
   		p = new T[capacity];
   	}

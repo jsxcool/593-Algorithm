@@ -39,15 +39,11 @@ public:
   	int getSize() { return size; }
   	
   	GrowArray(const GrowArray& orig) = delete;
-  	GrowArray& operator = (const GrowArray& orig){
-  		if(this != &orig){
-  			delete [] p;
-  			capacity = orig.capacity;
-  			size = orig.size;
-  			for(int i=0; i<size; i++)
-  				p[i] = orig.p[i];
-  			return *this;
-  		}
+  		
+  	GrowArray& operator = (const GrowArray& orig){ // only used for initialize
+  		capacity = 1;
+  		size = 0;
+  		p = new T[capacity];
   	}
 	void insertEnd(T v) { //O(1)
 		checkGrow();
@@ -69,8 +65,11 @@ private:
 public:
 	ConvexHull(int size): size(size) {
 		arr = new GrowArray<Point>*[size];
-		for(int i=0; i<size; i++)
+		for(int i=0; i<size; i++){
 			arr[i] = new GrowArray<Point>[size];
+			for(int j=0; j<size; j++)
+				arr[i][j] = GrowArray<Point>();
+		}			
 	}
 	~ConvexHull(){
 		for(int i=0; i<size; i++)
@@ -102,7 +101,7 @@ public:
 			int indexX = (data[i].x-minx)/unitX;
 			int indexY = (maxy-data[i].y)/unitY;
 			cout << indexX << ' ' <<indexY << '\n';
-			arr[indexX][indexY] = GrowArray<Point>();
+			//arr[indexX][indexY] = GrowArray<Point>();
 			arr[indexX][indexY].insertEnd(data[i]);
 		}
 	}

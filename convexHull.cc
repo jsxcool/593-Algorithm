@@ -36,9 +36,19 @@ public:
   		p = new T[capacity];
   	}
   	~GrowArray() { delete [] p; }
+  	int getSize() { return size; }
   	
   	GrowArray(const GrowArray& orig) = delete;
-  	GrowArray& operator = (const GrowArray& orig) = delete;
+  	GrowArray& operator = (const GrowArray& orig){
+  		if(this != &orig){
+  			delete [] p;
+  			capacity = orig.capacity;
+  			size = orig.size;
+  			for(int i=0; i<size; i++)
+  				p[i] = orig.p[i];
+  			return *this;
+  		}
+  	}
 	void insertEnd(T v) { //O(1)
 		checkGrow();
 		p[size++] = v;   // ++ after assigning
@@ -60,11 +70,12 @@ public:
 	ConvexHull(int size): size(size) {
 		arr = new GrowArray<Point>*[size];
 		for(int i=0; i<size; i++)
-			arr[0] = new GrowArray<Point>[size];
+			arr[i] = new GrowArray<Point>[size];
 	}
 	~ConvexHull(){
 		for(int i=0; i<size; i++)
 			delete [] arr[i];
+		delete [] arr;
 	}
 	
 	void read(const char* file){
@@ -74,9 +85,9 @@ public:
 		miny = INT_MAX;
 		maxx = INT_MIN;
 		maxy = INT_MIN;
-		while(!f.eof()){
+		while(!f.eof()){ // last point read in twice, ????
 			f >> x >> y;
-			cout << x << ' '<< y << '\n';
+			//cout << x << ' '<< y << '\n';
 			data.push_back(Point(x, y));
 			if(x > maxx) maxx = x;
 			if(x < minx) minx = x;
@@ -84,12 +95,29 @@ public:
 			if(y < miny) miny = y;
 		}
 		f.close();
+		double unitX = (maxx - minx)/size;
+		double unitY = (maxy - miny)/size;
+		int len = data.size();
+		for(int i=0; i<len; i++){
+			int indexX = (data[i].x-minx)/unitX;
+			int indexY = (maxy-data[i].y)/unitY;
+			cout << indexX << ' ' <<indexY << '\n';
+			arr[indexX][indexY] = GrowArray<Point>();
+			arr[indexX][indexY].insertEnd(data[i]);
+		}
 	}
-	
 	
 	void printMinMax(){
 		cout <<"min, max X: "<<minx << ' ' << maxx << '\n';
 		cout <<"min, max Y: "<<miny << ' ' << maxy << '\n';
+	}
+	
+	void printAllListSizes(){
+		for(int i=0; i<size; i++){
+			for(int j=0; j<size; j++)
+				cout << arr[i][j].getSize()<<' ';
+			cout << '\n' ;
+		}
 	}
 	
 };

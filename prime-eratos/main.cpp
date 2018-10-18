@@ -33,7 +33,7 @@ int countPrime2(int64_t n){
         isPrime[i] = true;
     for(int i=2; i<=sqrt(n); i++){  // O(sqrt(n))
         if(isPrime[i]){
-            for(int j=i*i; j<=n; j+=2*i)   // O(n)
+            for(int j=i*i; j<=n; j+=2*i)   // O(loglogn)
                 isPrime[j] = false;
         }
     }
@@ -42,7 +42,7 @@ int countPrime2(int64_t n){
         if (isPrime[i]){
 	    cout << i <<' ';        
 	    count++;
-	}
+		}
     }
     delete [] isPrime;
     return count;

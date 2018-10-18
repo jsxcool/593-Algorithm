@@ -72,29 +72,29 @@ public:
 	
 	void read(const char* file){
 		ifstream f(file, ifstream::in);
-		double x, y;
 		minx = INT_MAX;
 		miny = INT_MAX;
 		maxx = INT_MIN;
 		maxy = INT_MIN;
-		while(!f.eof()){ // last point read in twice, ????
-			f >> x >> y;
-			//cout << x << ' '<< y << '\n';
+		double x=0, y=0;
+		f >> x >> y;
+		while(!f.eof()){    // last point read in twice, ????
 			data.push_back(Point(x, y));
 			if(x > maxx) maxx = x;
 			if(x < minx) minx = x;
 			if(y > maxy) maxy = y;
 			if(y < miny) miny = y;
+			f >> x >> y;
 		}
 		f.close();
 		double unitX = (maxx - minx)/size;
 		double unitY = (maxy - miny)/size;
 		int len = data.size();
 		for(int i=0; i<len; i++){
-			int indexX = (data[i].x-minx)/unitX;
-			int indexY = (maxy-data[i].y)/unitY;
-			cout << indexX << ' ' <<indexY << '\n';
-			arr[indexX][indexY].insertEnd(data[i]);
+			//in case exceeding len for max - min
+			int indexX = (data[i].x-minx-0.0001)/unitX;  
+			int indexY = (maxy-data[i].y-0.0001)/unitY;
+			arr[indexY][indexX].insertEnd(data[i]);
 		}
 	}
 	
@@ -111,6 +111,18 @@ public:
 		}
 	}
 	
+	void printPerimeterClockWiseOrder(){
+		for(int j=0; j<size; j++)
+			cout << arr[0][j].getSize()<<' ';
+		cout << '\n';
+		for(int i=1; i<size-1; i++)
+			cout << arr[i][0].getSize()<<string((size-2)*2+1, ' ')
+			<< arr[i][15].getSize()<<'\n';
+		for(int j=0; j<size; j++)
+			cout << arr[15][j].getSize() << ' ';
+		cout << '\n';
+	}
+	
 };
 
 
@@ -118,9 +130,9 @@ int main(){
 // for homework n=16
   ConvexHull ch(16); // create a 16x16 grid of GrowArray
   ch.read("convexhullpoints.dat");
-  //ch.printAllListSizes(); // tell us how many are in each list
+  ch.printAllListSizes(); // tell us how many are in each list
   ch.printMinMax(); // print minx, maxx, miny, maxy
-  //ch.printPerimeterClockWiseOrder(); // p1,p2,p3,p4,p8,p12,p16..
+  ch.printPerimeterClockWiseOrder(); // p1,p2,p3,p4,p8,p12,p16..
   /*
 example shown n=4
      -----------------------

@@ -50,6 +50,27 @@ public:
 			s << g.p[i] <<' ';
 		return s;
 	}
+	
+	void printMinMax(){
+		if(size == 0){
+			cout << 0 << ' ';
+			return ;
+		} 
+		double minx, maxx, miny, maxy;
+		minx = maxx = p[0].x;
+		miny = maxy = p[0].y;
+		for(int i=1; i<size; i++){
+			if(p[i].x < minx)
+				minx = p[i].x;
+			if(p[i].x > maxx)
+				maxx = p[i].x;
+			if(p[i].y < miny)
+				miny = p[i].y;
+			if(p[i].y > maxy)
+				maxy = p[i].y;
+		}	
+		cout << "minx:"<<minx<<"miny:"<<miny<<"maxx:"<<maxx<<"maxy:"<<maxy<<' ';
+	}
 };
 
 class ConvexHull{
@@ -113,13 +134,16 @@ public:
 	
 	void printPerimeterClockWiseOrder(){
 		for(int j=0; j<size; j++)
-			cout << arr[0][j].getSize()<<' ';
+			arr[0][j].printMinMax();
 		cout << '\n';
-		for(int i=1; i<size-1; i++)
-			cout << arr[i][0].getSize()<<string((size-2)*2+1, ' ')
-			<< arr[i][15].getSize()<<'\n';
+		for(int i=1; i<size-1; i++){
+			arr[i][0].printMinMax();
+			cout <<string((size-2)*3, ' ');
+			arr[i][15].printMinMax();
+			cout <<'\n';
+			}
 		for(int j=0; j<size; j++)
-			cout << arr[15][j].getSize() << ' ';
+			arr[15][j].printMinMax();
 		cout << '\n';
 	}
 	

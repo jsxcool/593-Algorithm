@@ -11,6 +11,10 @@ private:
 			Node* prev; 
 			Node(int v=0, Node* n=nullptr, Node* p=nullptr)
 				: val(v), next(n), prev(p) {}
+			/* if the type for val is template T, the constructor should be:
+			 * Node(const T& val, Node* n, node* p): ... {}
+			 * Avoid copy; is a pointer(8 bytes)
+			 */
 	};
 	Node* head;
 	Node* tail;

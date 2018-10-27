@@ -2,6 +2,9 @@
 using namespace std;
 
 // O(n^2)    omega(n)
+// the first time, put the biggest to the end;
+// the second time, put the second biggest to the next end;
+// improve..  j : 0->k       k = n-1; k>1; k--;  that is selection sort
 void bubbleSort(int x[], int n){
     for(int i=0; i<n-1; i++){
         bool sorted = false;
@@ -50,10 +53,12 @@ void selectionSort2(int x[], int n){
 }
 
 // O(n^n)  omega(n)
+// every time, sort a subset, then insert the next one to the subset,
+// forming a new subset
 void insertSort(int x[], int n){
     for(int i=1; i<n; i++){
         int temp = x[i];
-        for(int j=i-1,index=i; j>=0; j--){
+        for(int j=i-1,index=i; j>=0; j--){  // index: the inserting position
             if(temp < x[j]) {
                 swap(x[index], x[j]);
                 index--;
@@ -66,7 +71,7 @@ void insertSort(int x[], int n){
 
 /*
  * pick a pivot
-  (1) pivot ← (x[left] + x[right]) / 2              worst picl
+  (1) pivot ← (x[left] + x[right]) / 2              worst pick
   (2) pivot ← (x[left] + x[right] + x[(left+right)/2]) / 3
   (3) pivot ← x[random]                             best pick
 *  Do not use…
@@ -86,13 +91,11 @@ void quickSort(int x[], int left, int right){
             i++;
         while(x[j] >= pivot)   // && i<j   ???
             j--;
-        if(i < j) {
+        if(i < j)
             swap(x[i], x[j]);
-        }
-
     }
 
-    quickSort(x, left, i-1);  //because >= pivot, must i
+    quickSort(x, left, i-1);  //because >= pivot, must i ???
     quickSort(x, i, right);
 }
 

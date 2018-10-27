@@ -3,7 +3,7 @@
 using namespace std;
 
 // Linear search : for i:0-->n,   O(n)   
-
+// .......
 
 // return the index of the target
 // Binary search: only suitable for sorted array

@@ -33,6 +33,13 @@ public:
 				right->preorderPrint();
 		}
 		void postorderPrint(){  //print sequence: left-right-self
+			if(!this)
+				return;
+			if(left != nullptr)
+				left->postorderPrint();
+			if(right != nullptr)
+				right->postorderPrint();
+			cout << val << ' ';
 		}
 		
 	};
@@ -69,12 +76,24 @@ public:
 		}
 	}
 	
+	//assumption: no same values in the tree
+	void remove(int v){
+		if(v=root->val){
+			root = nullptr;
+			return;
+		}
+	}
+	
 	void inorderPrint(){
-		this->root->inorderPrint();
+		root->inorderPrint();
 		cout << '\n';
 	}
 	void preorderPrint(){
-		this->root->preorderPrint();
+		root->preorderPrint();
+		cout << '\n';
+	}
+	void postorderPrint(){
+		root->postorderPrint();
 		cout << '\n';
 	}
 
@@ -87,8 +106,9 @@ int main(){
 	tr.add(5);
 	tr.add(88);
 	tr.add(10);
-	tr.add(129);
+	tr.add(111);
 	tr.add(25);
 	tr.inorderPrint();
 	tr.preorderPrint();
+	tr.postorderPrint();
 }

@@ -33,10 +33,26 @@ public:
         p->isLeaf = true;
     }
     
+    bool search(string key){
+    	if(root == nullptr)
+    		return false;
+    	Node* p = root;
+    	int len = key.size();
+    	for(int i=0; i<len; i++){
+    		int index = key[i] - 'a';
+    		if(p->children[index] == nullptr)
+    			return false;
+    		p = p->children[index];
+    	}
+    	return p->isLeaf ? true : false;
+    }
+    
 };
 
 
 int main(){
     Trie tr;
     tr.insert("forest");
+    cout << tr.search("forest") << '\n';
+    cout << tr.search("fores") << '\n';
 }

@@ -15,8 +15,99 @@ bool isOperator(char c){
 }
 
 int charToInt(char c){
-	return c-'0';
+	// only convert 0~9
+	return (int(c)<58 && int(c)>47)? c-'0' : c;
 }
+
+class BinarySearchTree{  // have been sorted
+private:
+    class Node{
+    public:
+        char val;
+        Node* left, *right;
+        Node(char v, Node* l=nullptr, Node* r=nullptr):
+                val(v), left(l), right(r) {}
+
+        // 3 ways of tree traversal
+        void inorderPrint(){  //print sequence: left-self-right
+            if(!this)      // this==nullptr
+                return;
+            if(left != nullptr)
+                left->inorderPrint();
+            cout << val << ' ';
+            if(right != nullptr)
+                right->inorderPrint();
+        }
+        void preorderPrint(){  //print sequence: self-left-right
+            if(!this)
+                return;
+            cout << val << ' ';
+            if(left != nullptr)
+                left->preorderPrint();
+            if(right != nullptr)
+                right->preorderPrint();
+        }
+        void postorderPrint(){  //print sequence: left-right-self
+            if(!this)
+                return;
+            if(left != nullptr)
+                left->postorderPrint();
+            if(right != nullptr)
+                right->postorderPrint();
+            cout << val << ' ';
+        }
+
+    };
+
+    Node* root;
+
+public:
+    BinarySearchTree(): root(nullptr) {}
+
+    // rule: smaller num is on the left, bigger num is on the right
+    void add(char v){
+        if(root==nullptr){
+            root = new Node(v);
+            return;
+        }
+        Node* p = root;
+        while(true){
+            if(v <= p->val){     // the identical value is on the left 
+                if(p->left == nullptr){
+                    p->left = new Node(v);
+                    return;
+                }
+                else
+                    p = p->left;
+            }
+            else{
+                if(p->right == nullptr){
+                    p->right = new Node(v);
+                    return;
+                }
+                else
+                    p = p->right;
+            }
+        }
+    }
+    
+    void inorderPrint(){
+    	cout << "inorderPrint: ";
+        root->inorderPrint();
+        cout << '\n';
+    }
+    void preorderPrint(){
+    	cout << "preorderPrint: ";
+        root->preorderPrint();
+        cout << '\n';
+    }
+    void postorderPrint(){
+    	cout << "postorderPrint: ";
+        root->postorderPrint();
+        cout << '\n';
+    }
+};
+
 
 class ExpressionTree{
 private:
@@ -35,8 +126,9 @@ private:
 				right->inorder();
 		}
 		
+		// for English alphabet, I regard them as their ASCII value 
 		int evaluate(){   // only for inorder
-			if(!isOperator(val)) // for leaf
+			if(!isOperator(val)) // for leaf(lowest level in recurssion)
 				return charToInt(val);
 			else{	
 				int valLeft = left->evaluate();    // recurssion
@@ -57,9 +149,9 @@ public:
 	ExpressionTree() { root = nullptr; }
 	
 	//reference for example: https://en.wikipedia.org/wiki/Binary_expression_tree
-	void insert(char s[]){
+	void insert(string s){
 		stack<Node*> sta;
-		int len = strlen(s);
+		int len = s.size();
 		for(int i=0; i<len; i++){
 			if(!isOperator(s[i]))   // for operands
 				sta.push(new Node(s[i]));
@@ -97,6 +189,7 @@ public:
 	
 	
 	void inorderPrint(){
+		cout << "inorderPrint: ";
 		root->inorder();
 		cout << '\n';
 	}
@@ -108,29 +201,45 @@ vector<string> load(const char file[]){
 	string lineBuffer;
 	while(!f.eof()){
 		getline(f, lineBuffer);
-		istringstream ls(lineBuffer);  // line stream
 		string s;
+		int len = lineBuffer.size();
+		for(int i=0; i<len; i+=2)
+			s += lineBuffer[i]; 
+		/*istringstream ls(lineBuffer);  // line stream
 		char token;
 		while(ls){
 			ls >> token; 
 			s += token; 
-		}
+		}*/
 		data.push_back(s);
-		cout << s << '\n';
 	}
+	data.pop_back(); // I don't know why there are one blank line more
 	f.close();
 	return data;
 }
 
 int main(){
-	ExpressionTree tr;
-	char input[] = "234*+"; 
-	tr.insert(input);
-	tr.inorderPrint();
-	cout << tr.evaluate() << '\n';
-	//vector<string> data = load("hw8inp.dat");
-	/*ExpressionTree tr2;
-	char input2[] = "12+345+**"; 
-	tr2.insert(input2);
-	tr2.inorderPrint();*/
+	vector<string> data = load("hw8inp.dat");
+	cout << "For BinarySearchTree: \n";
+	for(int i=0; i<data.size(); i++){
+		BinarySearchTree tr;
+		int len = data[i].size();
+		for(int j=0; j<len; j++)
+			tr.add(data[i][j]);
+		tr.inorderPrint();
+		tr.preorderPrint();
+		tr.postorderPrint();
+		cout << '\n';
+	}
+	
+	
+	cout << "\n\nFor ExpressionTree: \n";
+	for(int i=0; i<data.size(); i++){
+		ExpressionTree tr;
+		tr.insert(data[i]);
+		tr.inorderPrint();
+		cout << "evaluation: " << tr.evaluate() << '\n';
+	}
 }
+
+

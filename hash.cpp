@@ -39,8 +39,8 @@ public:
 	
 	void add(int key, int val){
 		checkGrow();
-		int pos = key % capacity;
-		while(arr[pos] != nullptr){
+		int pos = key % capacity;    // get the position
+		while(arr[pos] != nullptr){  // deal with collison
 			if(arr[pos]->key = key){  //cover its value(key must be unique)
 				arr[pos]->val = val;
 				return;
@@ -55,10 +55,16 @@ public:
 	
 	int getValue(int key){ // return val
 		int pos = key % capacity;
+		int count = 0;
 		while(arr[pos]==nullptr || arr[pos]->key != key){
 			pos++;
 			if(pos == capacity)
 				pos = 0;
+			count++;
+			if(count>capacity){
+				cout << "This key is not in hash map, return: ";
+				return -1;
+			}
 		}
 		return arr[pos]->val;
 	}
@@ -72,8 +78,8 @@ public:
 				pos = 0;
 			count++;
 			if(count>capacity){
-				cout << "This key is not in hash map\n";
-				return;
+				cout << "This key is not in hash map, return: ";
+				return ;
 			}
 		}
 		arr[pos] = nullptr;
@@ -91,14 +97,14 @@ public:
 };
 
 int main(){
-	HashMap hs(4);
+	HashMap hs(4);  // initial capacity should be relative big
 	hs.add(1,10);
 	hs.add(2,20);
 	hs.add(21,210);
 	hs.add(88,80);
 	cout << hs << '\n';
 	hs.add(1,8);
-	hs.remove(88);
+	hs.remove(5);
 	cout << hs << '\n';
 	cout << hs.getValue(88) << '\n';
 }

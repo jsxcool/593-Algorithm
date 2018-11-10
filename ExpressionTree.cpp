@@ -195,7 +195,7 @@ public:
 	}
 };
 
-vector<string> load(const char file[]){
+vector<string> load(const char* file){
 	vector<string> data;
 	ifstream f(file);
 	string lineBuffer;

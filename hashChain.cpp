@@ -11,7 +11,7 @@ private:
 	};
 	Node* head;
 public:
-	LinkedList() { head==nullptr; }
+	LinkedList() { head=nullptr; }
 	~LinkedList(){
 		Node* p = head;
 		while(p != nullptr){

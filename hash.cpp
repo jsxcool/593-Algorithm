@@ -1,4 +1,6 @@
 //Open Addressing Linear Probing
+// <map> -- SearchTree
+// <unordered_map> -- Hash
 #include<iostream>
 using namespace std;
 

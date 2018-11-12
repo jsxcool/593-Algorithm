@@ -2,6 +2,7 @@
 #include<vector>
 #include<fstream>
 #include<string>
+#include<cmath>
 using namespace std;
 
 vector<string> load(const char* file){
@@ -16,17 +17,31 @@ vector<string> load(const char* file){
 	return words;
 }
 
-class HashMap{
+class PerfectHash{
 private:
-	int capacity, collision;
+	int capacity;
 	string* data;
+	void checkGrow(int sum){ 
+		// give hash table more empty space; this is a prerequisite for O(1)
+		if(sum >= capacity){  
+			string* old = data;
+			int oldlen = capacity;
+			while(capacity <= sum)
+				capacity *= 2;
+			data = new string[capacity];
+			for(int i=0; i<oldlen; i++){
+				data[i] = old[i];
+			}
+			delete [] old;
+		}
+	}
 public:
-	HashMap(): capacity(20001), collision(0) {
+	PerfectHash(): capacity(10001) {
 		data = new string[capacity]();
 	}
-	~HashMap() { delete [] data; }
-	
-	int getCollision() {return collision;}
+	~PerfectHash() {
+		delete [] data;
+	}
 	
 	void add(string word){
 		int basic = 2;
@@ -37,15 +52,8 @@ public:
 			sum += num*basic;
 			basic *= 2; 
 		}
-		int pos = sum % capacity;
-		if(!data[pos].empty())
-			collision++;
-		while(!data[pos].empty()){
-			pos++;
-			if(pos==capacity)
-				pos = 0;
-		}
-		data[pos] = word;
+		checkGrow(sum);
+		data[sum] = word;
 	}
 	
 	bool search(string word){
@@ -57,31 +65,14 @@ public:
 			sum += num*basic;
 			basic *= 2; 
 		}
-		int pos = sum % capacity;
-		int count = 0;
-		while(count < capacity){
-			if(data[pos]==word)
-				return true;
-			if(data[pos].empty())  // when adding, continuous even if collision
-				return false;
-			pos++;
-			if(pos==capacity)
-				pos = 0;
-			count++;
-		}
+		if(data[sum] == word)
+			return true;
 		return false;
 	}
 	
-	friend ostream& operator << (ostream& s, HashMap hs){
-		for(int i=0; i<hs.capacity; i++){
-			if(!hs.data[i].empty())
-				s << hs.data[i] << ' ';
-		}
-		return s;
-	}
 };
 
-void addToHash(string s, HashMap dict[26][26]){
+void addToHash(string s, PerfectHash dict[26][26]){
 	int index0 = s[0]-'a';   
 	int index1 = s[1]-'a';
 	if(s[2] == '\0')   // eg "aa" can't solve
@@ -90,7 +81,7 @@ void addToHash(string s, HashMap dict[26][26]){
 	dict[index0][index1].add(wordLeft);
 }
 
-void searchInHash(string s, HashMap dict[26][26]){
+void searchInHash(string s, PerfectHash dict[26][26]){
 	int index0 = s[0] - 'a';
 	int index1 = s[1] - 'a';
 	if(s[2] == '\0')   // eg "aa" can't solve
@@ -103,18 +94,14 @@ void searchInHash(string s, HashMap dict[26][26]){
 }
 
 int main(){
-	/*HashMap** dict;  // 26*26 HashMaps
-	dict = new HashMap*[26];
-	for(int i=0; i<26; i++){
-		dict[i] = new HashMap(3055);
-	}*/
-	HashMap dict[26][26];
+	PerfectHash dict[26][26];
 	vector<string> dictionary;
 	dictionary = load("dict.txt");
 	int len = dictionary.size();
-	for(int i=0; i<1000; i++){  
+	for(int i=0; i<len; i++){  
 		addToHash(dictionary[i], dict);
 	}
+	//addToHash("apple", dict);
 	
 	ifstream f("words.dat");
 	string word;
@@ -122,12 +109,8 @@ int main(){
 		f >> word;
 		searchInHash(word, dict);
 	}
-	f.close(); 
-	
-	cout << "\nCollison map for dict[26][26]\n";
-	for(int i=0; i<26; i++){
-		for(int j=0; j<26; j++)
-			cout << dict[i][j].getCollision() << "  ";
-		cout << '\n';
-	}
+	f.close();
 }
+
+
+

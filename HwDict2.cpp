@@ -1,9 +1,19 @@
+/* This perfect Hash does not work well. Because the algorithm in Session08 
+ * can NOT GURANTEE there is no collison. If collison happens, the latter
+ * word would cover the former word. So for the add() function, I still need to
+ * go back to regular hash using "position++" while colliding. In general, it just 
+ * decreases the probability of collison, but can not avoid it.
+*/
 #include<iostream>
 #include<vector>
 #include<fstream>
 #include<string>
 #include<cmath>
 using namespace std;
+
+int primeNumber[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199};  // 46 counts
+
+int count=0;
 
 vector<string> load(const char* file){
 	vector<string> words;
@@ -17,30 +27,66 @@ vector<string> load(const char* file){
 	return words;
 }
 
+// PerfectHash is like a interconnect layer
 class PerfectHash{
 private:
-	int capacity;
-	string* data;
-	void checkGrow(int sum){ 
-		// give hash table more empty space; this is a prerequisite for O(1)
-		if(sum >= capacity){  
-			string* old = data;
-			int oldlen = capacity;
-			while(capacity <= sum)
-				capacity *= 2;
-			data = new string[capacity];
-			for(int i=0; i<oldlen; i++){
-				data[i] = old[i];
-			}
-			delete [] old;
+	class Hash{ // regular hash table, used as chain
+	public:
+		class HashNode{
+		public:
+			int key;
+			string val;
+			HashNode(int k=0, string v=""): key(k), val(v) {}
+		};
+		int size, used;
+		HashNode* words;
+	public:
+		Hash(int size): size(size), used(0){
+			words = new HashNode[size];
 		}
-	}
+		void rearrange(){
+			for(int i=0; i<44; i++){  // the number of primeNumber[] - 2
+				if(used+1 == primeNumber[i]){
+					HashNode* oldWords = words;
+					int oldSize = size;
+					size = primeNumber[i+2];
+					words = new HashNode[size];
+					for(int j=0; j<oldSize; j++){
+						if(!oldWords[j].val.empty()){
+							this->add(oldWords[j].val, oldWords[j].key);
+						}
+					}
+					return;
+				}
+			}
+		}
+		void add(string s, int sum){
+			int pos = sum % size;
+			while(words[pos].key != 0){
+				pos++;
+				if(pos > size - 1)
+					pos = 0;
+			}
+			words[pos] = HashNode(sum, s);
+			used++;
+		}
+	};
+	
+	int capacity;
+	Hash** data;
 public:
-	PerfectHash(): capacity(10001) {
-		data = new string[capacity]();
+	PerfectHash(): capacity(1001) {
+		data = new Hash*[capacity];
+		for(int i=0; i<capacity; i++)
+			data[i] = nullptr;
 	}
 	~PerfectHash() {
+		for(int i=0; i<capacity; i++){
+			if(data[i] != nullptr)
+				delete data[i];
+		}
 		delete [] data;
+		cout << count++ << ' ';
 	}
 	
 	void add(string word){
@@ -52,8 +98,12 @@ public:
 			sum += num*basic;
 			basic *= 2; 
 		}
-		checkGrow(sum);
-		data[sum] = word;
+		int pos = sum % capacity;
+		if(data[pos]==nullptr)
+			data[pos] = new Hash(1);
+		else
+			data[pos]->rearrange();  // check and decide if rearrange
+		data[pos]->add(word, sum);
 	}
 	
 	bool search(string word){
@@ -65,11 +115,16 @@ public:
 			sum += num*basic;
 			basic *= 2; 
 		}
-		if(data[sum] == word)
-			return true;
-		return false;
+		int pos = sum % capacity; 
+		if(data[pos] == nullptr)
+			return false;
+		else{
+			int index = sum % data[pos]->size;
+			if(data[pos]->words[index].val == word)
+				return true;
+			return false;
+		}
 	}
-	
 };
 
 void addToHash(string s, PerfectHash dict[26][26]){
@@ -101,7 +156,6 @@ int main(){
 	for(int i=0; i<len; i++){  
 		addToHash(dictionary[i], dict);
 	}
-	//addToHash("apple", dict);
 	
 	ifstream f("words.dat");
 	string word;
@@ -110,7 +164,11 @@ int main(){
 		searchInHash(word, dict);
 	}
 	f.close();
+	cout << count;
 }
 
+/* serialize: only need load the HashMap once, when searching different words
+Why the destructor runs so many times ????
+*/
 
 

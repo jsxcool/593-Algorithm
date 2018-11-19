@@ -15,8 +15,8 @@ bool isOperator(char c){
 }
 
 int charToInt(char c){
-	// only convert 0~9
-	return (int(c)<58 && int(c)>47)? c-'0' : c;
+	// only convert 0~9; others will be regarded as 0
+	return (int(c)<58 && int(c)>47)? c-'0' : 0;
 }
 
 class BinarySearchTree{  // have been sorted
@@ -213,7 +213,7 @@ vector<string> load(const char* file){
 		}*/
 		data.push_back(s);
 	}
-	data.pop_back(); // I don't know why there are one blank line more
+	data.pop_back(); // I don't know why there are one more blank line
 	f.close();
 	return data;
 }

@@ -103,16 +103,11 @@ void searchInHash(string s, HashMap dict[26][26]){
 }
 
 int main(){
-	/*HashMap** dict;  // 26*26 HashMaps
-	dict = new HashMap*[26];
-	for(int i=0; i<26; i++){
-		dict[i] = new HashMap(3055);
-	}*/
 	HashMap dict[26][26];
 	vector<string> dictionary;
 	dictionary = load("dict.txt");
 	int len = dictionary.size();
-	for(int i=0; i<1000; i++){  
+	for(int i=0; i<len; i++){  
 		addToHash(dictionary[i], dict);
 	}
 	

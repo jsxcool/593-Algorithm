@@ -1,4 +1,4 @@
-/* This perfect Hash does not work well. Because the algorithm in Session08 
+/* This perfectHash is not perfect. Because the algorithm in Session08 
  * can NOT GURANTEE there is no collison. If collison happens, the latter
  * word would cover the former word. So for the add() function, I still need to
  * go back to regular hash using "position++" while colliding. In general, it just 
@@ -13,7 +13,7 @@ using namespace std;
 
 int primeNumber[] = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29, 31, 37, 41, 43, 47, 53, 59, 61, 67, 71, 73, 79, 83, 89, 97, 101, 103, 107, 109, 113, 127, 131, 137, 139, 149, 151, 157, 163, 167, 173, 179, 181, 191, 193, 197, 199};  // 46 counts
 
-int count=0;
+//int count=0;
 
 vector<string> load(const char* file){
 	vector<string> words;
@@ -86,7 +86,7 @@ public:
 				delete data[i];
 		}
 		delete [] data;
-		cout << count++ << ' ';
+		//cout << count++ << ' ';
 	}
 	
 	void add(string word){
@@ -164,7 +164,7 @@ int main(){
 		searchInHash(word, dict);
 	}
 	f.close();
-	cout << count;
+	//cout << count;
 }
 
 /* serialize: only need load the HashMap once, when searching different words

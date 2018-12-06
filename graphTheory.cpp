@@ -1,3 +1,4 @@
+// advanced graph list
 #include<iostream>
 #include<vector>
 using namespace std;
@@ -12,6 +13,7 @@ private:
 		Node(const T& v, Node* n=nullptr): val(v), next(n) {}
 	};
 	Node* head;
+	// add tail
 public:
 	LinkedList() : head(nullptr) {}
 	~LinkedList() {
@@ -28,16 +30,18 @@ class GraphList{
 private:
 	class Edge{
 	public:
+		// from is Edge's index  (self)
 		int to; // the end vertex
 		double w; // weight
 		Edge(int to, double w): to(to), w(w) {}
 	};
 	
 	vector<LinkedList<Edge>> edges; // every vertex is one LinkedList of edges(with a certain order of vertex arrangement)
+	int V;
 	
 public:
-	GraphList(int num) { // the number of vertexes
-		for(int i=0; i<num; i++)
+	GraphList(int num): V(num) { // the number of vertexes
+		for(int i=0; i<V; i++)
 			edges.push_back(LinkedList<Edge>());
 	}
 	

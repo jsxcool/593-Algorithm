@@ -78,9 +78,30 @@ public:
 
     //assumption: no same values in the tree
     void remove(int v){
-        if(v=root->val){
+        if(v==root->val){
             root = nullptr;
             return;
+        }
+        Node* p = root;
+        while(true){
+        	if(v < p->val){
+        		if(p->left == nullptr){
+        			cout << "This value is not in the tree !";
+        			return;
+        		}
+        		p = p->left;
+        	}
+        	else if(v > p->val){
+        		if(p->right == nullptr){
+        			cout << "This value is not in the tree !";
+        			return;
+        		}
+        		p = p->right;
+        	}
+        	else{
+        		p = nullptr;
+        		return; 
+        	}
         }
     }
 
@@ -109,6 +130,8 @@ int main(){
     tr.add(111);
     tr.add(25);
     tr.inorderPrint();
-    tr.preorderPrint();
-    tr.postorderPrint();
+    //tr.preorderPrint();
+    //tr.postorderPrint();
+    tr.remove(10);
+    tr.inorderPrint();
 }

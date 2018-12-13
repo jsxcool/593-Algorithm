@@ -83,12 +83,14 @@ public:
             return;
         }
         Node* p = root;
+        Node* pBefore = nullptr;
         while(true){
         	if(v < p->val){
         		if(p->left == nullptr){
         			cout << "This value is not in the tree !";
         			return;
         		}
+                pBefore = p;
         		p = p->left;
         	}
         	else if(v > p->val){
@@ -96,11 +98,47 @@ public:
         			cout << "This value is not in the tree !";
         			return;
         		}
+                pBefore = p;
         		p = p->right;
         	}
-        	else{
-        		p = nullptr;
-        		return; 
+        	else{  // find the target node
+        		if(pBefore->left == p){
+                    if(p->right == nullptr) {
+                        pBefore->left = p->left;
+                        return ;
+                    }
+                    Node* l = p->left;
+                    pBefore->left = p->right;
+                    if(p->right->left == nullptr){
+                        p->right->left = l;
+                        return;
+                    }
+                    // find the leftest one to connect with l
+                    Node* temp = p->right->left;
+                    while(temp->left != nullptr)
+                        temp = temp->left;
+                    temp->left = l;
+                    return;
+                }
+                else{
+                    if(p->right == nullptr) {
+                        pBefore->right = p->left;
+                        return ;
+                    }
+                    Node* l = p->left;
+                    pBefore->right = p->right;
+                    if(p->right->left == nullptr){
+                        p->right->left = l;
+                        return;
+                    }
+                    // find the leftest one to connect with l
+                    Node* temp = p->right->left;
+                    while(temp->left != nullptr)
+                        temp = temp->left;
+                    temp->left = l;
+                    return;
+                }
+
         	}
         }
     }

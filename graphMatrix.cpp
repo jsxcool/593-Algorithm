@@ -4,6 +4,7 @@ using namespace std;
 
 double INFINITY = 99999999;
 
+// assume all connections are double-directed
 class LowerMatrixGraph{
 private:
 	int V;   // number of vertice

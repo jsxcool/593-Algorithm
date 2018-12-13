@@ -1,8 +1,7 @@
-// advanced graph list
+// Find the shortest path from one vertex to all others
 #include<iostream>
 #include<vector>
 #include<limits>
-#include<queue>
 using namespace std;
 
 double inf = std::numeric_limits<double>::infinity();
@@ -20,15 +19,6 @@ public:
 	// add tail
 public:
 	LinkedList() : head(nullptr) {}
-	// when it works ???   delete pointer in advance
-	/*~LinkedList() {   
-		Node* p = head;
-		while(p != nullptr){
-			Node* q = p->next;
-			delete p;
-			p = q;
-		}
-	}*/
 };
 
 class GraphList{
@@ -48,19 +38,6 @@ private:
 	vector<LinkedList<Edge>> edges; // every vertex is one LinkedList of edges(with a certain order of vertex arrangement)
 	int V;
 	
-	//preorder: self first, then bigger children, then smalle children
-	void DFS(int v, bool* visited){
-		visited[v] = true;
-		vector<int> adjacent = isConnected(v);
-		int len = adjacent.size();
-		for(int i=len-1; i>=0; i--){
-			if(!visited[adjacent[i]]){
-				cout << adjacent[i] << ' ';
-				DFS(adjacent[i], visited);
-			}
-		}
-	}
-	
 public:
 	GraphList(int num): V(num) { // the number of vertexes
 		for(int i=0; i<V; i++)
@@ -74,10 +51,6 @@ public:
 				iter = iter->next; 
 			}
 		}
-	}
-	
-	~GraphList() {
-	
 	}
 	
 	void set(int i, int j, double w){
@@ -103,45 +76,34 @@ public:
 	}
 	
 	// all connected points to vertex v
-	vector<int> isConnected(int v){  // O(n)
-		vector<int> ret;
+	vector<Edge> isConnected(int v){  // O(n)
+		vector<Edge> ret;
 		LinkedList<Edge> ls = edges[v];
 		for(LinkedList<Edge>::Node* node=ls.head; node != nullptr; node=node->next){
 			if(node->val.w != inf)
-				ret.push_back(node->val.to);
+				ret.push_back(node->val);
 		}
 		return ret;  // this vector is ascending sequence
 	}
-	
-	void DFSRecurssive(int v){  // the start vertex
-		bool visited[V];
-		for(int i=0; i<V; i++) 
-			visited[i] = false;
-		cout << v << ' ';
-		DFS(v, visited);
-	}
-	
-	void BFSIterable(int v){
-		bool visited[V];
-		for(int i=0; i<V; i++) 
-			visited[i] = false;
-		queue<int> myqueue;
-		myqueue.push(v);
-		visited[v] = true;
-		while(!myqueue.empty()){
-			int temp = myqueue.front(); // the 'oldest'(frontest) element in this queue
-			cout << temp << ' ';
-			myqueue.pop();
-			vector<int> adjacent = isConnected(temp);
-			for(int i=0; i<adjacent.size(); i++){
-				if(!visited[adjacent[i]]){
-					myqueue.push(adjacent[i]);
-					visited[adjacent[i]] = true;
-				}
+		
+		
+	vector<double> BellmanFord(int start, int end){  // O(VE)
+		vector<double> cost;
+		int len = end - start + 1;
+		cost.push_back(0.0); // selt to self is zero
+		for(int i=1; i<len; i++)
+			cost.push_back(inf);
+		for(int i=start; i<=end; i++){
+			vector<Edge> adjacent = isConnected(i);
+			for(int j=0; j<adjacent.size(); j++){
+				if(cost[adjacent[j].to] > cost[i] + adjacent[j].w)
+					cost[adjacent[j].to] = cost[i] + adjacent[j].w;
 			}
-		}
+		} 
+		return cost;
 	}
-
+	
+	
 	friend ostream& operator <<(ostream& s, const GraphList& gl){
 		for(int i=0; i<gl.V; i++){
 			LinkedList<Edge> ls = gl.edges[i];
@@ -154,27 +116,21 @@ public:
 		}
 		return s;
 	}
-
+	
+	
 };
 
-
 int main(){
-	GraphList gl(4);
-	gl.set(0,1,1);
-	gl.set(1,0,1);
-	gl.set(1,2,2);
-	gl.set(2,1,2);
-	gl.set(2,3,3);
-	gl.set(3,2,3);
-	gl.set(0,3,4);
-	gl.set(3,0,4);
-	/*cout << gl;
-	cout << gl.isConnected(2,3) <<' '<< gl.isConnected(1,3) << '\n' ;
-	vector<int> nei = gl.isConnected(3);
-	for(int i=0; i<nei.size(); i++)
-		cout << nei[i] << ' '; */
-	gl.DFSRecurssive(3);
-	cout << '\n';
-	gl.BFSIterable(3);
-	cout << '\n';
+	GraphList gf(4);
+	gf.set(0,1,2.5);
+	gf.set(1,0,2.5);
+	gf.set(1,2,0.5);
+	gf.set(2,1,0.5);
+	gf.set(2,3,1.5);
+	gf.set(3,2,1.5);
+	gf.set(3,0,0.5);
+	gf.set(0,3,0.5);
+	vector<double> ret = gf.BellmanFord(0,3);
+	for(int i=0; i<ret.size(); i++)
+		cout << ret[i] << ' ';
 }

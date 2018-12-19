@@ -87,12 +87,13 @@ public:
 	}
 		
 		
-	vector<double> BellmanFord(int start, int end){  // O(VE)
+	vector<double> BellmanFord(int start, int end){  //  O(V^2)
 		vector<double> cost;
 		int len = end - start + 1;
 		cost.push_back(0.0); // selt to self is zero
 		for(int i=1; i<len; i++)
 			cost.push_back(inf);
+			
 		for(int i=start; i<=end; i++){
 			vector<Edge> adjacent = isConnected(i);
 			for(int j=0; j<adjacent.size(); j++){

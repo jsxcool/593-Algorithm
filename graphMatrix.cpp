@@ -31,7 +31,7 @@ public:
 	}
 	
 	// self and self are NOT conneted
-	bool isConnected(int i, int j){
+	bool isConnected(int i, int j){    // O(1)
 		if(i<j){
 			int temp = i;
 			i = j;

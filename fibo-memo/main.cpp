@@ -1,6 +1,7 @@
 #include <iostream>
 using namespace std;
 
+// O(n)
 int fibo(int n){
     static int memo[]={0};
     if(n==1 || n==2)
@@ -10,6 +11,7 @@ int fibo(int n){
     return memo[n] = fibo(n-1) + fibo(n-2);
 }
 
+// O(2^n)
 int fibo2(int n){
     if(n==1 || n==2)
         return 1;

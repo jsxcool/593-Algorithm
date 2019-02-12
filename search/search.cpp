@@ -55,7 +55,7 @@ int searchGoldenMean(int x[], int n){
 
 int main(){
 	int x[] = {1,2,3,4,5,6,7,11,15,19,26,39};
-	int x2[] = {2,3,5,7,9,11,6,3,2,1};
+	int x2[] = {-31,-11,1,5,1,-11,-31,-59};
 	cout << searchBinary(x, 12, 39) << '\n';
-	cout << searchGoldenMean(x2, 10)<<'\n';    // can NOT work !!!
+	cout << searchGoldenMean(x2, 8)<<'\n';    // can NOT work !!!
 }
